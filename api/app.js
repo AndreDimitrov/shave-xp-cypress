@@ -28,6 +28,12 @@ app.get('/token/:email', async function (req, res) {
     const { email } = req.params
     // Uma vez que o resultado é devolvido eu acrescento a constante ""token".
     const token = await findToken(email)
+
+    // "!token" >> quer dizer quando o token é nulo.
+    if (!token) {
+        return res.status(404).end()
+    }
+
     res.status(200).json(token)
 })
 

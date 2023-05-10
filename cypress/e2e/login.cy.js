@@ -3,15 +3,15 @@
 // No JS funções e variáveis são construídas com padrão Camel Case
 // No JS classes ou módulos com padrão pascal case
 
-import loginPage from '../support/pages/login'
-import shaversPage from '../support/pages/shavers'
+import loginPage from '../support/pages/views/login'
+import shaversPage from '../support/pages/views/shavers'
 import header from '../support/components/header/index'
 // forma de importar "data" em 100% JS
 import data from '../fixtures/users-login.json'
 
 describe('login', () => {
 
-    // Desas forma é 100% cypress.
+    // Dessa forma é 100% cypress.
     // beforeEach(() => {
     //     cy.fixture('users-login').then(function(data){
     //         this.data = data
@@ -49,7 +49,7 @@ describe('login', () => {
             loginPage.submit(user.email, user.password)
 
             const message = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            loginPage.noticeShouldBe(message)
+            loginPage.shared.noticeErrorShouldBe(message)
 
 
         })
@@ -60,7 +60,7 @@ describe('login', () => {
             loginPage.submit(user.email, user.password)
 
             const message = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            loginPage.noticeShouldBe(message)
+            loginPage.shared.noticeErrorShouldBe(message)
 
         })
 
@@ -83,7 +83,7 @@ describe('login', () => {
         data.shortpass.forEach((p) => {
             it(`não deve logar com a senha ${p}`, () => {
                 loginPage.submit('andrepdimitrov@gmail.com', p)
-                loginPage.alertShouldBe('Pelo menos 6 caracteres')
+                loginPage.shared.alertShouldBe('Pelo menos 6 caracteres')
             })
         })
     })
@@ -93,7 +93,7 @@ describe('login', () => {
         data.invemails.forEach((e) => {
             it(`não deve logar com o email: ${e}`, () => {
                 loginPage.submit(e, 'q@x@123')
-                loginPage.alertShouldBe('Informe um email válido')
+                loginPage.shared.alertShouldBe('Informe um email válido')
             })
         })
     })
