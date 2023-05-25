@@ -3,9 +3,9 @@
 // No JS funções e variáveis são construídas com padrão Camel Case
 // No JS classes ou módulos com padrão pascal case
 
-import loginPage from '../support/pages/views/login'
-import shaversPage from '../support/pages/views/shavers'
-import header from '../support/components/header/index'
+// import loginPage from '../support/pages/views/login'
+// import shaversPage from '../support/pages/views/shavers'
+// import header from '../support/components/header/index'
 // forma de importar "data" em 100% JS
 import data from '../fixtures/users-login.json'
 
@@ -21,7 +21,7 @@ describe('login', () => {
     context('quando submeto o formulário', () => {
 
         // Quando utilizar a arrow function, o JS não tem acesso ao contexto "this". Se a função for convencional, ele tem acesso ao contexto "this". CY tudo é orientado a função. 
-        it.only('deve logar com sucesso', () => {
+        it('deve logar com sucesso', () => {
 
             // dado que eu tenho um NOVO usuário cadastrado
             const user = data.success
@@ -31,10 +31,15 @@ describe('login', () => {
             cy.createUser(user)
 
             // quando submeto o form de login com esse usuário
-            loginPage.submit(user.email, user.password)
+
+            //Page Pbject
+            // loginPage.submit(user.email, user.password)
+
+            // Custom command
+            cy.submitLogin(user.email, user.password)
 
             // então devo ser logado co sucesso
-            shaversPage.header.userShouldBeLoggedIn(user.name)
+            cy.userShouldBeLoggedIn(user.name)
 
             // Forma abaixo é uma outra alternativa de utilizar as massas de dados através da fixture.
             // cy.fixture('users-login').then(function(data) {
@@ -46,10 +51,10 @@ describe('login', () => {
         it('não deve logar com senha incorreta', () => {
             const user = data.invpass
 
-            loginPage.submit(user.email, user.password)
+            cy.submitLogin(user.email, user.password)
 
             const message = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            loginPage.shared.noticeErrorShouldBe(message)
+            cy.noticeErrorShouldBe(message)
 
 
         })
@@ -57,16 +62,23 @@ describe('login', () => {
         it('não deve logar com email não cadastrado', () => {
             const user = data.email404
 
-            loginPage.submit(user.email, user.password)
+            cy.submitLogin(user.email, user.password)
 
             const message = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
-            loginPage.shared.noticeErrorShouldBe(message)
+            cy.noticeErrorShouldBe(message)
 
         })
 
         it('campos obrigatórios', () => {
-            loginPage.submit()
-            loginPage.requiredFields('E-mail é obrigatório', 'Senha é obrigatória')
+            cy.submitLogin()
+
+            cy.get('.alert-error')
+                .should('have.length', 2)
+                .and(($small) => {              // O dollar na frente é pra deixar caro que ele está buscando um elemento HTML.
+                    expect($small.get(0).textContent).to.equal('E-mail é obrigatório')
+                    expect($small.get(1).textContent).to.equal('Senha é obrigatória')
+                })
+
             // cy.contains('.alert-error', 'E-mail é obrigatório')
             //     .should('be.visible')
 
@@ -82,8 +94,8 @@ describe('login', () => {
         // Posso usar direto o data.shortpass, pois já é um array com os valores.
         data.shortpass.forEach((p) => {
             it(`não deve logar com a senha ${p}`, () => {
-                loginPage.submit('andrepdimitrov@gmail.com', p)
-                loginPage.shared.alertShouldBe('Pelo menos 6 caracteres')
+                cy.submitLogin('andrepdimitrov@gmail.com', p)
+                cy.alertShouldBe('Pelo menos 6 caracteres')
             })
         })
     })
@@ -92,8 +104,8 @@ describe('login', () => {
         // Posso usar direto o data.shortpass, pois já é um array com os valores.
         data.invemails.forEach((e) => {
             it(`não deve logar com o email: ${e}`, () => {
-                loginPage.submit(e, 'q@x@123')
-                loginPage.shared.alertShouldBe('Informe um email válido')
+                cy.submitLogin(e, 'q@x@123')
+                cy.alertShouldBe('Informe um email válido')
             })
         })
     })
