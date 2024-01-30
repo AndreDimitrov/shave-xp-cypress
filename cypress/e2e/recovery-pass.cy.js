@@ -1,14 +1,9 @@
 /// <reference types="cypress"/>
 
-import fpPage from '../support/pages/views/forgot-pass'
-import rpPage from '../support/pages/views/reset-pass'
-import loginPage from '../support/pages/views/login'
-import shaversPage from '../support/pages/views/shavers'
-
 describe('esqueci minha senha', () => {
 
 
-    it('deve poder solicitar o ressgate de senha', () => {
+    it('deve poder solicitar o resgate de senha', () => {
 
         const user = {
             name: 'André Esquecido',
@@ -19,12 +14,12 @@ describe('esqueci minha senha', () => {
 
         cy.createUser(user)
 
-        fpPage.go()
-        fpPage.submit(user.email)
+        // fpPage.go()
+        // fpPage.submit(user.email)
+        cy.requestPassword(user.email)
 
         const message = 'Enviamos um e-mail para confirmar a recuperação de senha, verifique sua caixa de entrada.'
-
-        fpPage.noticeShouldBe(message)
+        cy.noticeSuccessShouldBe(message)
 
     })
 
@@ -66,11 +61,13 @@ describe('esqueci minha senha', () => {
             // fpPage.noticeShouldBe(message)
 
             // Pegar o valor da variável de ambiente que foi geraa no bloco anterior para informar na tela.
-            rpPage.go(Cypress.env('passToken'))
-            rpPage.submit('teste12', 'teste12')
+            // rpPage.go(Cypress.env('passToken'))
+            // rpPage.submit('teste12', 'teste12')
+
+            cy.resetPassword(Cypress.env('passToken'), 'teste12', 'teste12')
 
             const message = 'Agora você já pode logar com a sua nova senha secreta.'
-            rpPage.noticeShouldBe(message)
+            cy.noticeSuccessShouldBe(message)
 
             // cy.log(Cypress.env('passToken'))
 
@@ -80,8 +77,11 @@ describe('esqueci minha senha', () => {
         // Essa "afterEach" é uma validação pós cenário. Não faz parte do teste, é apenas um double check.
         // Aqui vc testa o login.
         afterEach(() => {
-            loginPage.submit(user.email, 'teste12')
-            shaversPage.header.userShouldBeLoggedIn(user.name)
+
+            cy.submitLogin(user.email, 'teste12')
+
+            // então devo ser logado co sucesso
+            cy.userShouldBeLoggedIn(user.name)
         })
 
     })

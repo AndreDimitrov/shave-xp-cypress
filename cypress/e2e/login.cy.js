@@ -74,7 +74,7 @@ describe('login', () => {
 
             cy.get('.alert-error')
                 .should('have.length', 2)
-                .and(($small) => {              // O dollar na frente é pra deixar caro que ele está buscando um elemento HTML.
+                .and(($small) => {              // O dollar na frente é pra deixar claro que ele está buscando um elemento HTML.
                     expect($small.get(0).textContent).to.equal('E-mail é obrigatório')
                     expect($small.get(1).textContent).to.equal('Senha é obrigatória')
                 })

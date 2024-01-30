@@ -1,10 +1,7 @@
 /// <reference types="cypress"/>
 
 import data from '../fixtures/order.json'
-import loginPage from '../support/pages/login'
-import shaversPage from '../support/pages/views/shavers'
-import catalogPage from '../support/pages/views/catalog'
-import orderPage from '../support/pages/views/order'
+
 
 describe('pedido', () => {
 
@@ -26,15 +23,11 @@ describe('pedido', () => {
     })
 
     it('deve poder solicitar serviços', () => {
+        cy.selectShaver(shaver.name)
+        cy.selectService(service.description)
+        cy.confirmOrder()
         // Incluído no arquivo Shavers >> index.js
         // Busca no arquivo "order.js", de fixtures, para pegar massa de dados.
-        shaversPage.selectShaver(shaver.name)
-        catalogPage.hasShaver(shaver.name)
-
-        catalogPage.selectService(service.description)
-        catalogPage.hasTitle(service.description)
-
-        catalogPage.confirmOrder()
-        orderPage.hasOrder()
+        cy.hasOrder()
     })
 })
