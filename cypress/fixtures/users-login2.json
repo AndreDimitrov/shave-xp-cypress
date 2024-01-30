@@ -1,0 +1,32 @@
+{
+    "success": {
+        "name": "André",
+        "email": "andrepdimitrov@gmail.com",
+        "password": "q@x@123"
+    },
+    "invpass": {
+        "email": "andrepdimitrov@yahoo.com",
+        "password": "123456"
+    },
+    "email404": {
+        "email": "andrepdimitrov@404.com",
+        "password": "123456"
+    },
+    "shortpass": [
+        "1",
+        "12",
+        "123",
+        "1234",
+        "12345"
+    ],
+    "invemails": [
+        "andrepdimitrov&gmail.com",
+        "andrepdimitrov.com.br",
+        "@gmaill.com",
+        "@",
+        "andrepdimitrov@",
+        "123123",
+        "@#$@#$",
+        "xpto123"
+    ]
+}
